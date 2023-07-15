@@ -2,33 +2,41 @@
 
 example to use workflows
 ```
-name: Build Container Image
+name: Build Docker Image
 
 on:
-  push:
-    branches:
-      - dev
-  pull_request:
-    branches:
-      - dev
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      username:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      password:
 
 jobs:
-  get-version:
+  build-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source code
-        uses: actions/checkout@v3
-      - name: set short commit sha
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-    outputs:
-      version-tag: ${{ steps.vars.outputs.sha_short }}
-
-  build-pipeline:
-    needs: get-version
-    uses: warapong-pj/target-repo/.github/workflows/docker.yaml@main
-    with:
-      registry: ghcr.io/warapong-pj
-      application: sample-app
-      version: ${{ github.ref_name }}-${{ needs.get-version.outputs.version-tag }}
+      - uses: actions/checkout@v3
+      - name: login to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ inputs.username }}
+          password: ${{ secrets.password }}
+      - name: push container image to container registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
 ```
