@@ -1,0 +1,38 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      username:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      password:
+
+jobs:
+  build-docker-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source codee
+        uses: actions/checkout@v3
+      - name: login to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ inputs.username }}
+          password: ${{ secrets.password }}
+      - name: push container image to container registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
