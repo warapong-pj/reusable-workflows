@@ -9,15 +9,14 @@ on:
       username:
         required: true
         type: string
-      password:
-        required: true
-        type: string
       application:
         required: true
         type: string
       version:
         required: true
         type: string
+    secrets:
+      password:
 
 jobs:
   build-docker-image:
@@ -29,7 +28,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           username: ${{ inputs.username }}
-          password: ${{ inputs.password }}
+          password: ${{ secrets.password }}
       - name: push container image to container registry
         uses: docker/build-push-action@v3
         with:
