@@ -2,41 +2,39 @@
 
 example to use workflows
 ```
-name: Build Docker Image
+name: Build pipeline
 
 on:
-  workflow_call:
-    inputs:
-      registry:
-        required: true
-        type: string
-      username:
-        required: true
-        type: string
-      application:
-        required: true
-        type: string
-      version:
-        required: true
-        type: string
-    secrets:
-      password:
+  push:
+    branches:
+      - feat/*
+      - fix/*
+      - refactor/*
+      - dev
+  pull_request:
+    branches:
+      - dev
 
 jobs:
-  build-docker-image:
+  get-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: login to container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ inputs.registry }}
-          username: ${{ inputs.username }}
-          password: ${{ secrets.password }}
-      - name: push container image to container registry
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
+      - name: checkout source code
+        uses: actions/checkout@v3
+      - name: set short commit sha
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    outputs:
+      version-tag: ${{ steps.vars.outputs.sha_short }}
+
+  build-pipeline:
+    needs: get-version
+    uses: warapong-pj/reusable-workflows/.github/workflows/build-docker-image.yaml@dev
+    with:
+      registry: ghcr.io/${{ github.actor }}
+      username: ${{ github.actor }}
+      application: sample-app
+      version: ${{ github.ref_name }}-${{ needs.get-version.outputs.version-tag }}
+    secrets:
+      password: ${{ secrets.GITHUB_TOKEN }}
 ```
