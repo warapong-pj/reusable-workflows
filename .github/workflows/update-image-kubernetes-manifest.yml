@@ -1,4 +1,4 @@
-name: Deploy pipeline
+name: Update Image Kubernetes Manifest
 on:
   repository_dispatch:
     types:
