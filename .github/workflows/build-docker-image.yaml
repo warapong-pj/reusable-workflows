@@ -19,7 +19,7 @@ on:
       password:
 
 jobs:
-  build-docker-image:
+  build-docker-and-push-image:
     runs-on: ubuntu-latest
     steps:
       - name: checkout source codee
