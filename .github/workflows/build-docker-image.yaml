@@ -6,6 +6,12 @@ on:
       registry:
         required: true
         type: string
+      username:
+        required: true
+        type: string
+      password:
+        required: true
+        type: string
       application:
         required: true
         type: string
@@ -18,12 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: login to github packages
+      - name: login to container registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ inputs.registry }}
+          username: ${{ inputs.username }}
+          password: ${{ inputs.password }}
       - name: push container image to container registry
         uses: docker/build-push-action@v3
         with:
