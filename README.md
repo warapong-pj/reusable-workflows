@@ -7,9 +7,6 @@ name: Build pipeline
 on:
   push:
     branches:
-      - feat/*
-      - fix/*
-      - refactor/*
       - dev
   pull_request:
     branches:
