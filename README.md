@@ -47,6 +47,7 @@ build-docker-image
 |version|version to tag container image|string|
 
 scan-npm-vulnerability-assessment
+N/A
 
 scan-docker-image-vulnerability-assessment
 |parameter|description|type|
@@ -64,3 +65,4 @@ scan-dast
 |port|application port|string|
 
 update-kubernetes-manifest-with-kustomize
+N/A
