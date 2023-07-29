@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  build:
+  update-kustomize-container-image:
     runs-on: ubuntu-latest
     steps:
       - name: checkout source codee
