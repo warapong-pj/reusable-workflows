@@ -1,4 +1,4 @@
-name: Update Kubernetes Manifest With Kustomize
+name: Update Kubernetes Manifest With Helm
 
 on:
   workflow_call:
