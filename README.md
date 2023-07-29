@@ -41,8 +41,8 @@ build-docker-image
 |parameter|description|type|
 |:---:|:---:|:---:|
 |registry|container registry name|string|
-|username|username to authentication container registry|string|
-|password|password to authentication container registry|strign|
+|username|container registry username|string|
+|password|container registry password|strign|
 |application|container image name|string|
 |version|version to tag container image|string|
 
