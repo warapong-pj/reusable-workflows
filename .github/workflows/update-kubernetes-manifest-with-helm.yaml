@@ -1,0 +1,56 @@
+name: Update Kubernetes Manifest With Kustomize
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source codee
+        uses: actions/checkout@v3
+      - name: update kubernetes manifest
+        run: |
+          #!/bin/sh
+
+          set -e
+
+          if ! command -v helm &> /dev/null
+          then
+            curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
+          fi
+
+          FILE="${{ inputs.application }}/values-${{ inputs.environment }}"
+
+          if [ ! -d $FILE ]
+          then
+            echo "file dose not existing"
+            exit 1
+          fi
+
+          yq -i '.image.repository = "${{ inputs.registry }}/${{ inputs.application }}"' $FILE
+          yq -i '.image.tag = "${{ inputs.version }}"' $FILE
+
+          helm template ${{ inputs.application }} --values $FILE
+
+          # cd -
+          # git config --global user.email "warapong.pj@gmail.com"
+          # git config --global user.name "warapong-pj"
+          # git add $APP_DIR
+          # git commit -m "ci: update ${{ inputs.application }} image tag ${{ inputs.version }} on ${{ inputs.environment }} environment"
+          # git push origin ${{ github.ref_name }}
