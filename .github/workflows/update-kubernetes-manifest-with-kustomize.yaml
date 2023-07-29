@@ -1,9 +1,20 @@
 name: Update Kubernetes Manifest With Kustomize
 
 on:
-  repository_dispatch:
-    types:
-      - update_event
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -22,7 +33,7 @@ jobs:
               curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           fi
 
-          APP_DIR="${{ github.event.client_payload.application }}/overlay/${{ github.event.client_payload.environment }}"
+          APP_DIR="${{ inputs.application }}/overlay/${{ inputs.environment }}"
 
           if [ ! -d $APP_DIR ]
           then
@@ -31,12 +42,12 @@ jobs:
           fi
 
           # cd $APP_DIR
-          # kustomize edit set image ${{ github.event.client_payload.registry }}/${{ github.event.client_payload.application }}:${{ github.event.client_payload.version }}
+          # kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
           # kustomize build
 
           # cd -
           # git config --global user.email "warapong.pj@gmail.com"
           # git config --global user.name "warapong-pj"
           # git add $APP_DIR
-          # git commit -m "ci: update ${{ github.event.client_payload.application }} image tag ${{ github.event.client_payload.version }} on ${{ github.event.client_payload.environment }} environment"
+          # git commit -m "ci: update ${{ inputs.application }} image tag ${{ inputs.version }} on ${{ inputs.environment }} environment"
           # git push origin ${{ github.ref_name }}
