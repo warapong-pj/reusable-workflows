@@ -43,4 +43,24 @@ build-docker-image
 |registry|container registry name|string|
 |username|username to authentication container registry|string|
 |password|password to authentication container registry|strign|
+|application|container image name|string|
 |version|version to tag container image|string|
+
+scan-npm-vulnerability-assessment
+
+scan-docker-image-vulnerability-assessment
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+
+scan-dast
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+|port|application port|string|
+
+update-kubernetes-manifest-with-kustomize
