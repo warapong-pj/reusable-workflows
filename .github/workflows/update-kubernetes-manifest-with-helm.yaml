@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  update-kustomize-container-image:
+  update-helm-value-container-image:
     runs-on: ubuntu-latest
     steps:
       - name: checkout source codee
@@ -28,22 +28,25 @@ jobs:
 
           set -e
 
-          if ! command -v kustomize &> /dev/null
+          if ! command -v helm &> /dev/null
           then
-              curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+            curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
           fi
 
-          APP_DIR="${{ inputs.application }}/overlay/${{ inputs.environment }}"
+          FILE="${{ inputs.application }}/values-${{ inputs.environment }}.yaml"
 
-          if [ ! -d $APP_DIR ]
+          if [ ! -f $FILE ]
           then
-            echo "directory dose not existing"
+            echo "file dose not existing"
             exit 1
           fi
 
-          cd $APP_DIR
-          kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
-          kustomize build
+          yq -i '.image.repository = "${{ inputs.registry }}/${{ inputs.application }}"' $FILE
+          yq -i '.image.tag = "${{ inputs.version }}"' $FILE
+
+          helm template ${{ inputs.application }} --values $FILE
 
           # cd -
           # git config --global user.email "warapong.pj@gmail.com"
