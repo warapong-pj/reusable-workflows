@@ -37,7 +37,7 @@ jobs:
 
           FILE="${{ inputs.application }}/values-${{ inputs.environment }}"
 
-          if [ ! -d $FILE ]
+          if [ ! -f $FILE ]
           then
             echo "file dose not existing"
             exit 1
