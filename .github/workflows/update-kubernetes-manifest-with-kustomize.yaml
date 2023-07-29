@@ -41,9 +41,9 @@ jobs:
             exit 1
           fi
 
-          # cd $APP_DIR
-          # kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
-          # kustomize build
+          cd $APP_DIR
+          kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
+          kustomize build
 
           # cd -
           # git config --global user.email "warapong.pj@gmail.com"
