@@ -35,7 +35,7 @@ jobs:
             ./get_helm.sh
           fi
 
-          FILE="${{ inputs.application }}/values-${{ inputs.environment }}"
+          FILE="${{ inputs.application }}/values-${{ inputs.environment }}.yaml"
 
           if [ ! -f $FILE ]
           then
