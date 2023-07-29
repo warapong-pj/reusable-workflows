@@ -35,3 +35,32 @@ jobs:
     secrets:
       password: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+### pipeline parameter
+build-docker-image
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|username|container registry username|string|
+|password|container registry password|strign|
+|application|container image name|string|
+|version|version to tag container image|string|
+
+scan-npm-vulnerability-assessment(no parameter)
+
+scan-docker-image-vulnerability-assessment
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+
+scan-dast
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+|port|application port|string|
+
+update-kubernetes-manifest-with-kustomize(no parameter)

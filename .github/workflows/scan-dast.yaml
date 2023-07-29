@@ -1,20 +1,20 @@
 name: Build pipeline
 
 on:
-    workflow_call:
-      inputs:
-        registry:
-          required: true
-          type: string
-        application:
-          required: true
-          type: string
-        version:
-          required: true
-          type: string
-        port:
-          required: true
-          type: string
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      port:
+        required: true
+        type: string
 
 jobs:
   scan-dast:
@@ -27,5 +27,5 @@ jobs:
           set -xe
 
           docker network create dast
-          docker run -i -t -d --network dast --name ${{ inputs.application }} ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
-          docker run -t --net dast owasp/zap2docker-stable zap-full-scan.py -I -j -m 10 -T 60 -t http://${{ inputs.application }}:${{ inputs.port }}
+          docker run -i -t -d -p ${{ inputs.port }}:${{ inputs.port }} --network dast --name ${{ inputs.application }} ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
+          docker run -t --network dast owasp/zap2docker-stable zap-full-scan.py -I -j -m 10 -T 60 -t http://${{ inputs.application }}:${{ inputs.port }}

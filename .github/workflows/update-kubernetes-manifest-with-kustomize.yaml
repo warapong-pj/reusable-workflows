@@ -1,0 +1,42 @@
+name: Update Kubernetes Manifest With Kustomize
+
+on:
+  repository_dispatch:
+    types:
+      - update_event
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source codee
+        uses: actions/checkout@v3
+      - name: update kubernetes manifest
+        run: |
+          #!/bin/sh
+
+          set -e
+
+          if ! command -v kustomize &> /dev/null
+          then
+              curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          fi
+
+          APP_DIR="${{ github.event.client_payload.application }}/overlay/${{ github.event.client_payload.environment }}"
+
+          if [ ! -d $APP_DIR ]
+          then
+            echo "directory dose not existing"
+            exit 1
+          fi
+
+          # cd $APP_DIR
+          # kustomize edit set image ${{ github.event.client_payload.registry }}/${{ github.event.client_payload.application }}:${{ github.event.client_payload.version }}
+          # kustomize build
+
+          # cd -
+          # git config --global user.email "warapong.pj@gmail.com"
+          # git config --global user.name "warapong-pj"
+          # git add $APP_DIR
+          # git commit -m "ci: update ${{ github.event.client_payload.application }} image tag ${{ github.event.client_payload.version }} on ${{ github.event.client_payload.environment }} environment"
+          # git push origin ${{ github.ref_name }}
