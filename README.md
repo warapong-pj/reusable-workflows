@@ -63,4 +63,10 @@ scan-dast
 |version|version to tag container image|string|
 |port|application port|string|
 
-update-kubernetes-manifest-with-kustomize(no parameter)
+update-kubernetes-manifest-with-kustomize
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+|environment|application environment|string|
