@@ -35,3 +35,12 @@ jobs:
     secrets:
       password: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+### pipeline parameter
+build-docker-image
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|username|username to authentication container registry|string|
+|password|password to authentication container registry|strign|
+|version|version to tag container image|string|
