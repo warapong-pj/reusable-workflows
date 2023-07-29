@@ -70,3 +70,11 @@ update-kubernetes-manifest-with-kustomize
 |application|container image name|string|
 |version|version to tag container image|string|
 |environment|application environment|string|
+
+update-kubernetes-manifest-with-helm
+|parameter|description|type|
+|:---:|:---:|:---:|
+|registry|container registry name|string|
+|application|container image name|string|
+|version|version to tag container image|string|
+|environment|application environment|string|
