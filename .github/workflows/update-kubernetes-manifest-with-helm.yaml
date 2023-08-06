@@ -20,7 +20,7 @@ jobs:
   update-helm-value-container-image:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout source codee
+      - name: checkout source code
         uses: actions/checkout@v3
       - name: update kubernetes manifest
         run: |
