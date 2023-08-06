@@ -51,3 +51,9 @@ jobs:
           # git add $APP_DIR
           # git commit -m "ci: update ${{ inputs.application }} image tag ${{ inputs.version }} on ${{ inputs.environment }} environment"
           # git push origin ${{ github.ref_name }}
+      - name: check kustomize manifest
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: kustomize
+          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12
+          directory: "${{ inputs.application }}/overlay/${{ inputs.environment }}"
