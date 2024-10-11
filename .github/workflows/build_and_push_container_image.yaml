@@ -40,6 +40,13 @@ jobs:
           username: ${{ inputs.username }}
           password: ${{ secrets.password }}
 
+      - name: check dockerfile policy
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          framework: dockerfile
+          dockerfile_path: .
+          check: CKV_DOCKER_7,CKV_DOCKER_8,CKV_DOCKER_10
+
       - name: push container image to container registry
         uses: docker/build-push-action@v6
         with:
