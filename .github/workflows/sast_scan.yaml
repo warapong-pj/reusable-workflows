@@ -1,7 +1,7 @@
 name: sast scan
 
 on:
-  push: {}
+  workflow_call: {}
 
 jobs:
   sonarcloud:
