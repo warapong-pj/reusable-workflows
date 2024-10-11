@@ -21,6 +21,8 @@ on:
 jobs:
   build-and-push-container-image:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: checkout source code
         uses: actions/checkout@v4
