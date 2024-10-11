@@ -1,5 +1,7 @@
 name: sast scan
 
+on:
+  push: {}
 
 jobs:
   sonarcloud:
