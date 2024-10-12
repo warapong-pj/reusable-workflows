@@ -45,7 +45,7 @@ jobs:
           kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
           kustomize build
 
-      - name: check policy kustomize manifest
+      - name: check kubernetes manifest policy
         uses: bridgecrewio/checkov-action@master
         with:
           framework: kustomize
