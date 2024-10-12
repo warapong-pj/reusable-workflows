@@ -1,0 +1,58 @@
+name: helm update container image
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  update-helm-value-container-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: update kubernetes manifest
+        run: |
+          #!/bin/sh
+
+          set -e
+
+          if ! command -v helm &> /dev/null
+          then
+            curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
+          fi
+
+          FILE="${{ inputs.application }}/values-${{ inputs.environment }}.yaml"
+
+          if [ ! -f $FILE ]
+          then
+            echo "file dose not existing"
+            exit 1
+          fi
+
+          yq -i '.image.repository = "${{ inputs.registry }}/${{ inputs.application }}"' $FILE
+          yq -i '.image.tag = "${{ inputs.version }}"' $FILE
+
+          helm template chart --values $FILE
+
+      - name: check kubernetes manifest policy
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: helm
+          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12,CKV_K8S_8,CKV_K8S_9
+          directory: ${{ inputs.application }}
+          var_file: ${{ inputs.application }}/values-${{ inputs.environment }}.yaml
