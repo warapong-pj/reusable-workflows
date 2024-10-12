@@ -1,0 +1,53 @@
+name: kustomize update container image
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      application:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+
+jobs:
+  kustomize-update-container-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+      - name: update kubernetes manifest
+        run: |
+          #!/bin/sh
+
+          set -e
+
+          if ! command -v kustomize &> /dev/null
+          then
+              curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          fi
+
+          APP_DIR="${{ inputs.application }}/overlays/${{ inputs.environment }}"
+
+          if [ ! -d $APP_DIR ]
+          then
+            echo "directory doesn't existing"
+            exit 1
+          fi
+
+          cd $APP_DIR
+          kustomize edit set image ${{ inputs.registry }}/${{ inputs.application }}:${{ inputs.version }}
+          kustomize build
+
+      - name: check policy kustomize manifest
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: kustomize
+          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12,CKV_K8S_8,CKV_K8S_9
+          directory: kustomize/overlays/dev
